@@ -1,0 +1,10 @@
+{
+  "firebase": "bug-test",
+  "rules": "rules.json",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

@@ -1,0 +1,592 @@
+{
+  "rules": {
+    ".write": "auth.uid == 'server'",
+    ".read": "auth.uid == 'server'",
+    "$other": {
+      ".validate": false
+    },
+    "queues": {
+      "github": {
+        "ping": {
+          "timestamp": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".validate": "newData.hasChildren(['timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$eventKey": {
+          "_lease": {
+            "expiry": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "time": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "attempts": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            ".validate": "newData.hasChildren(['expiry'])",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "statusSyncKey": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".write": "data.val() == null && !('reviewable-dev-piotr' == 'reviewable')"
+        },
+        ".indexOn": [
+          "statusSyncKey"
+        ]
+      },
+      "githubMergeableSync": {
+        "ping": {
+          "timestamp": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".validate": "newData.hasChildren(['timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$prKey": {
+          "_lease": {
+            "expiry": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "time": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "attempts": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            ".validate": "newData.hasChildren(['expiry'])",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "owner": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "repo": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "prNumber": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "retryInterval": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".validate": "newData.hasChildren(['owner', 'repo', 'prNumber'])",
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "githubPullRequestSync": {
+        "ping": {
+          "timestamp": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".validate": "newData.hasChildren(['timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$prKey": {
+          "_lease": {
+            "expiry": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "time": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "attempts": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            ".validate": "newData.hasChildren(['expiry'])",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "userKey": {
+            ".validate": "newData.isString() && (auth.uid == newData.val() || auth.uid == 'server')",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "owner": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "repo": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "prNumber": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "updateReview": {
+            ".validate": "newData.isBoolean()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "rewriteSoftRevisions": {
+            ".validate": "newData.isBoolean()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "syncComments": {
+            ".validate": "newData.isBoolean()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "syncStatus": {
+            ".validate": "newData.isBoolean()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "overrideError": {
+            ".validate": "newData.isBoolean()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "responseKeys": {
+            "$responseKey": {
+              ".validate": "newData.val() == true",
+              "$other": {
+                ".validate": false
+              }
+            },
+            ".validate": "newData.parent().child('userKey').val() != null || !newData.hasChildren()"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() && (data.val() == null || newData.val() >= data.val())",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".read": "data.val() == null || data.child('userKey').val() == auth.uid",
+          ".write": "data.val() == null && newData.child('userKey').val() != null || data.child('userKey').val() == newData.child('userKey').val()",
+          ".validate": "($prKey == newData.child('owner').val().toLowerCase().replace('\\\\', '\\\\5c').replace('.', '\\\\2e').replace('$', '\\\\24').replace('#', '\\\\23').replace('[', '\\\\5b').replace(']', '\\\\5d').replace('/', '\\\\2f') + '|' + newData.child('repo').val().toLowerCase().replace('\\\\', '\\\\5c').replace('.', '\\\\2e').replace('$', '\\\\24').replace('#', '\\\\23').replace('[', '\\\\5b').replace(']', '\\\\5d').replace('/', '\\\\2f') + '|' + newData.child('prNumber').val() + '|' + (newData.child('userKey').val() == null ? '*' : newData.child('userKey').val()) && (newData.child('updateReview').val() == true || data.child('updateReview').val() == false || data.child('updateReview').val() == null) && (newData.child('rewriteSoftRevisions').val() == true || data.child('rewriteSoftRevisions').val() == false || data.child('rewriteSoftRevisions').val() == null) && (newData.child('syncComments').val() == true || data.child('syncComments').val() == false || data.child('syncComments').val() == null) && (newData.child('syncStatus').val() == true || data.child('syncStatus').val() == false || data.child('syncStatus').val() == null) && (newData.child('overrideError').val() == true || data.child('overrideError').val() == false || data.child('overrideError').val() == null)) && newData.hasChildren(['owner', 'repo', 'prNumber', 'timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "reconciliation": {
+        "ping": {
+          "timestamp": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".validate": "newData.hasChildren(['timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$prKey": {
+          "_lease": {
+            "expiry": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "time": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "attempts": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            ".validate": "newData.hasChildren(['expiry'])",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "owner": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "repo": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "prNumber": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "updateCompletion": {
+            ".validate": "newData.isBoolean()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() && (data.val() == null || newData.val() >= data.val())",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".write": "true",
+          ".validate": "($prKey == newData.child('owner').val().toLowerCase().replace('\\\\', '\\\\5c').replace('.', '\\\\2e').replace('$', '\\\\24').replace('#', '\\\\23').replace('[', '\\\\5b').replace(']', '\\\\5d').replace('/', '\\\\2f') + '|' + newData.child('repo').val().toLowerCase().replace('\\\\', '\\\\5c').replace('.', '\\\\2e').replace('$', '\\\\24').replace('#', '\\\\23').replace('[', '\\\\5b').replace(']', '\\\\5d').replace('/', '\\\\2f') + '|' + newData.child('prNumber').val() && (newData.child('updateCompletion').val() == true || data.child('updateCompletion').val() == false || data.child('updateCompletion').val() == null)) && newData.hasChildren(['owner', 'repo', 'prNumber', 'timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "stripe": {
+        "ping": {
+          "timestamp": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".validate": "newData.hasChildren(['timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$eventKey": {
+          "_lease": {
+            "expiry": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "time": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "attempts": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            ".validate": "newData.hasChildren(['expiry'])",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "id": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".write": "data.val() == null && !('reviewable-dev-piotr' == 'reviewable')",
+          ".validate": "newData.hasChildren(['id'])"
+        }
+      },
+      "requests": {
+        "ping": {
+          "timestamp": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".validate": "newData.hasChildren(['timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$requestKey": {
+          "_lease": {
+            "expiry": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "time": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "attempts": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            ".validate": "newData.hasChildren(['expiry'])",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "action": {
+            ".validate": "newData.val() == 'backfill' || newData.val() == 'checkCoverage' || newData.val() == 'connect' || newData.val() == 'disassociate' || newData.val() == 'disconnect' || newData.val() == 'enroll' || newData.val() == 'evaluate' || newData.val() == 'fillIssues' || newData.val() == 'fillUserProfile' || newData.val() == 'reconcile' || newData.val() == 'reconnect' || newData.val() == 'saveCoupon' || newData.val() == 'subscribe' || newData.val() == 'syncCustomer' || newData.val() == 'unenroll' || newData.val() == 'upload'",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "userKey": {
+            ".validate": "newData.isString() && (auth.uid == newData.val() || auth.uid == 'server')",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "ownerName": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "repoName": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "type": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "planId": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "coverage": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "teamId": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "extraOrganizations": {
+            "$index": {
+              ".validate": "newData.isString() && $index.matches(/^\\d\\d?$/)",
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "personalMemo": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "stripeToken": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "username": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "filter": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "errorCode": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "couponCode": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "fileName": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "size": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "code": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "context": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".write": "data.val() == null && auth.uid != null",
+          ".validate": "newData.hasChildren(['action', 'userKey'])",
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "responses": {
+        "ping": {
+          "timestamp": {
+            ".validate": "newData.isNumber()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          ".validate": "newData.hasChildren(['timestamp'])",
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$requestKey": {
+          "_lease": {
+            "expiry": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "time": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            "attempts": {
+              ".validate": "newData.isNumber()",
+              "$other": {
+                ".validate": false
+              }
+            },
+            ".validate": "newData.hasChildren(['expiry'])",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "userKey": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "outcome": {
+            ".validate": "newData.isString()",
+            "$other": {
+              ".validate": false
+            }
+          },
+          "error": {
+            ".validate": "true"
+          },
+          "result": {
+            ".validate": "true"
+          },
+          ".read": "data.val() == null || auth.uid == data.child('userKey').val()",
+          ".write": "newData.val() == null && (data.val() == null || auth.uid == data.child('userKey').val())",
+          ".validate": "newData.hasChildren(['userKey', 'outcome'])",
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    }
+  }
+}

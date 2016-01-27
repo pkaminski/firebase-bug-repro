@@ -1,0 +1,19 @@
+{
+  "name": "firebase-bug-repro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkaminski/firebase-bug-repro.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pkaminski/firebase-bug-repro/issues"
+  },
+  "homepage": "https://github.com/pkaminski/firebase-bug-repro#readme"
+}
