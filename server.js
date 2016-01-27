@@ -11,6 +11,8 @@ let _ = require('lodash');
 let NodeFire = require('nodefire');
 let firelease = require('firelease');
 
+// NodeFire.enableFirebaseLogging(true);
+// NodeFire.DEBUG = true;  // to set debug to true on auth token
 firelease.captureError = _.noop;
 firelease.pingQueues();
 
